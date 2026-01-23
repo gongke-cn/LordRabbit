@@ -1,0 +1,154 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-03 16:21+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: tools.ox:150 tools.ox:150
+msgid "$: argument is null"
+msgstr ""
+
+#: tools.ox:351 tools.ox:351
+msgid "$: illegal toolchain \"$\""
+msgstr ""
+
+#: tools.ox:447 tools.ox:447
+msgid "$: option \"$\" is already declared"
+msgstr ""
+
+#: tools.ox:458 tools.ox:458
+msgid "$: \"$\" is not in option \"$\" valid values"
+msgstr ""
+
+#: gnu.ox:85 gnu.ox:85
+msgid "cannot get target information from \"$\""
+msgstr ""
+
+#: config.ox:54 config.ox:54
+msgid "$: \"$\" is already declared at $"
+msgstr ""
+
+#: inner_tools.ox:14 inner_tools.ox:14
+msgid "cannot find \"$\""
+msgstr ""
+
+#: inner_tools.ox:18 inner_tools.ox:18
+msgid "\"$\" is not a regular file"
+msgstr ""
+
+#: inner_tools.ox:21 inner_tools.ox:21
+msgid "load \"$\"\n"
+msgstr ""
+
+#: makefile.ox:93 makefile.ox:93 makefile.ox:93 makefile.ox:93
+msgid "unknown source format \"$\""
+msgstr ""
+
+#: validator.ox:17 validator.ox:17
+msgid "check \"$\": "
+msgstr ""
+
+#: validator.ox:21 validator.ox:21
+msgid "failed\n"
+msgstr ""
+
+#: validator.ox:33 validator.ox:33
+msgid "\"$\" is not valid"
+msgstr ""
+
+#: lordrabbit.ox:28 lordrabbit.ox:28
+msgid "Usage: lordrabbit [OPTION]...\nOption:\n$"
+msgstr ""
+
+#: lordrabbit.ox:36
+msgid "Generate debug information in products"
+msgstr ""
+
+#: lordrabbit.ox:44
+msgid "Add a macro definition"
+msgstr ""
+
+#: lordrabbit.ox:57
+msgid "Add a header file Lookup directory"
+msgstr ""
+
+#: lordrabbit.ox:65
+msgid "Set the compiler flags"
+msgstr ""
+
+#: lordrabbit.ox:73
+msgid "Add a library lookup directory"
+msgstr ""
+
+#: lordrabbit.ox:81
+msgid "Add a library to be linked with the products"
+msgstr ""
+
+#: lordrabbit.ox:89
+msgid "Set the linker's flags"
+msgstr ""
+
+#: lordrabbit.ox:97
+msgid "Set the generatd file format"
+msgstr ""
+
+#: lordrabbit.ox:105
+msgid "Set the toolchain used"
+msgstr ""
+
+#: lordrabbit.ox:113
+msgid "Set the cross compiling toolchain's prefix tag"
+msgstr ""
+
+#: lordrabbit.ox:121
+msgid "Set an option's value of the project. The argument's format is \"NAME=VALUE\". If \"=VALUE\" is not provided, the option's value is true"
+msgstr ""
+
+#: lordrabbit.ox:133
+msgid "List the options of the project"
+msgstr ""
+
+#: lordrabbit.ox:140
+msgid "Do not use cache"
+msgstr ""
+
+#: lordrabbit.ox:148
+msgid "Set the output filename"
+msgstr ""
+
+#: lordrabbit.ox:156
+msgid "Set the output directory"
+msgstr ""
+
+#: lordrabbit.ox:164
+msgid "Set the installation directory"
+msgstr ""
+
+#: lordrabbit.ox:171
+msgid "Show thie help message"
+msgstr ""
+
+#: lordrabbit.ox:217
+msgid "cannot find valid generator"
+msgstr ""
+
+#: lordrabbit.ox:228
+msgid "\"$\" is not valid\n"
+msgstr ""
+
+#: lordrabbit.ox:244
+msgid "generate \"$\"\n"
+msgstr ""

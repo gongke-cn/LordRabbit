@@ -1,0 +1,163 @@
+# Chinese translations for win package.
+# Copyright (C) 2026 THE win'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the win package.
+# ke.gong <3188045634@qq.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: win 7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-03 16:21+0800\n"
+"PO-Revision-Date: 2026-02-03 16:08+0800\n"
+"Last-Translator: ke.gong <3188045634@qq.com>\n"
+"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: tools.ox:150
+msgid "$: argument is null"
+msgstr "$: 参数为null"
+
+#: tools.ox:351
+msgid "$: illegal toolchain \"$\""
+msgstr "$: 无效的工具链\"$\""
+
+#: tools.ox:447
+msgid "$: option \"$\" is already declared"
+msgstr "$: 选项\"$\"已声明"
+
+#: tools.ox:458
+msgid "$: \"$\" is not in option \"$\" valid values"
+msgstr "$: \"$\"不是选项\"$\"的有效值"
+
+#: gnu.ox:85
+msgid "cannot get target information from \"$\""
+msgstr "不能从\"$\"中获取目标平台信息"
+
+#: config.ox:54
+msgid "$: \"$\" is already declared at $"
+msgstr "$: \"$\"已在位置$被声明"
+
+#: inner_tools.ox:14
+msgid "cannot find \"$\""
+msgstr "找不到\"$\""
+
+#: inner_tools.ox:18
+msgid "\"$\" is not a regular file"
+msgstr "\"$\"不是一个普通文件"
+
+#: inner_tools.ox:21
+msgid "load \"$\"\n"
+msgstr "加载\"$\"\n"
+
+#: makefile.ox:93
+msgid "unknown source format \"$\""
+msgstr "未知的源文件格式\"$\""
+
+#: validator.ox:17
+msgid "check \"$\": "
+msgstr "检测\"$\": "
+
+#: validator.ox:21
+msgid "failed\n"
+msgstr "失败\n"
+
+#: validator.ox:33
+msgid "\"$\" is not valid"
+msgstr "\"$\"无效"
+
+#: lordrabbit.ox:28
+msgid ""
+"Usage: lordrabbit [OPTION]...\n"
+"Option:\n"
+"$"
+msgstr ""
+"用法: lordrabbit [选项]...\n"
+"选项:\n"
+"$"
+
+#: lordrabbit.ox:36
+msgid "Generate debug information in products"
+msgstr "产物中包含调试信息"
+
+#: lordrabbit.ox:44
+msgid "Add a macro definition"
+msgstr "增加一个宏定义"
+
+#: lordrabbit.ox:57
+msgid "Add a header file Lookup directory"
+msgstr "增加一个头文件查找目录"
+
+#: lordrabbit.ox:65
+msgid "Set the compiler flags"
+msgstr "设置编译器标记"
+
+#: lordrabbit.ox:73
+msgid "Add a library lookup directory"
+msgstr "增加一个库查找目录"
+
+#: lordrabbit.ox:81
+msgid "Add a library to be linked with the products"
+msgstr "增加一个产物链接的库"
+
+#: lordrabbit.ox:89
+msgid "Set the linker's flags"
+msgstr "设置链接器标记"
+
+#: lordrabbit.ox:97
+msgid "Set the generatd file format"
+msgstr "设置生成文件格式"
+
+#: lordrabbit.ox:105
+msgid "Set the toolchain used"
+msgstr "设置使用的工具链"
+
+#: lordrabbit.ox:113
+msgid "Set the cross compiling toolchain's prefix tag"
+msgstr "设置交叉编译工具链名称前缀"
+
+#: lordrabbit.ox:121
+msgid ""
+"Set an option's value of the project. The argument's format is "
+"\"NAME=VALUE\". If \"=VALUE\" is not provided, the option's value is true"
+msgstr ""
+"设置一个项目选项的值。参数格式为\"名称=值\"。如果\"=值\"部分没有提供表示选项"
+"值为true"
+
+#: lordrabbit.ox:133
+msgid "List the options of the project"
+msgstr "列出所有项目选项"
+
+#: lordrabbit.ox:140
+msgid "Do not use cache"
+msgstr "不使用配置缓存"
+
+#: lordrabbit.ox:148
+msgid "Set the output filename"
+msgstr "设置输出文件名称"
+
+#: lordrabbit.ox:156
+msgid "Set the output directory"
+msgstr "设置输出目录"
+
+#: lordrabbit.ox:164
+msgid "Set the installation directory"
+msgstr "设置安装目录"
+
+#: lordrabbit.ox:171
+msgid "Show thie help message"
+msgstr "显示帮助信息"
+
+#: lordrabbit.ox:217
+msgid "cannot find valid generator"
+msgstr "找不到有效的生成器"
+
+#: lordrabbit.ox:228
+msgid "\"$\" is not valid\n"
+msgstr "\"$\"无效\n"
+
+#: lordrabbit.ox:244
+msgid "generate \"$\"\n"
+msgstr "生成\"$\"\n"
