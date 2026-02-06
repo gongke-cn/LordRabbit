@@ -25,6 +25,7 @@ public run_lr_build: func(dn) {
     //Store old settings.
     old_toolchain = config.toolchain
     old_currdir = config.currdir
+    old_package = config.package
 
     config.buildfiles.push(path)
     config.currdir = normpath(dn)
@@ -34,10 +35,15 @@ public run_lr_build: func(dn) {
     //Restore old settings.
     config.toolchain = old_toolchain
     config.currdir = old_currdir
+    config.package = old_package
 }
 
 //Get the full pathname.
 public get_full_path: func(path) {
+    if path == null {
+        return null
+    }
+
     prefix = path[0]
     if prefix != "+" && prefix != "-" {
         prefix = null
@@ -58,6 +64,10 @@ public get_full_path: func(path) {
 
 //Get the real pathname.
 public get_real_path: func(path) {
+    if path == null {
+        return null
+    }
+
     prefix = path[0]
     if prefix == "+" {
         return normpath("{config.outdir}/{path.slice(1)}")

@@ -1,11 +1,13 @@
 
 ref "std/io"
 ref "std/path"
+ref "std/fs"
 ref "./config"
 ref "./tools"
 ref "./inner_tools"
 ref "./exe_validator"
 ref "./shell_command"
+ref "./gtkdoc"
 ref "./log"
 
 //Generate the makefile.
@@ -27,6 +29,8 @@ gen_makefile: func() {
         objs: {}
         install: ""
         uninstall: ""
+        cleanfiles: []
+        cleandirs: []
     }
 
     tab: "\t"
@@ -498,6 +502,53 @@ gen_makefile: func() {
     mktargets = basename(config.outfile)
     mkjobs = config.cli_args.$iter().map(("\"{$}\"")).$to_str(" ")
 
+    //Gtk document.
+    if Object.keys(config.gtkdocs).to_array().length {
+
+        gtkdoc = GtkDoc()
+
+        for Object.values(config.gtkdocs) as doc_def {
+            if gtkdoc_cmds {
+                gtkdoc_cmds += "\n"
+            }
+            gtkdoc_cmds += gtkdoc.build({
+                module: doc_def.module
+                srcdir: get_real_path(doc_def.srcdir)
+                hdrs: doc_def.hdrs.$iter().map((get_real_path($))).to_array()
+                formats: doc_def.formats
+            })
+
+            if doc_def.formats && doc_def.formats.length {
+                for doc_def.formats as fmt {
+                    o.cleandirs.push("{config.outdir}/gtkdoc/{doc_def.module}/{fmt}")
+                }
+            } else {
+                o.cleandirs.push("{config.outdir}/gtkdoc/{doc_def.module}/html")
+            }
+
+            if doc_def.package {
+                ent_file = "{outdir}/gtkdoc/{doc_def.module}/xml/gtkdocentities.ent"
+                mkdir_p(dirname(ent_file))
+                File.store_text(ent_file, ''
+<!ENTITY package_name "{{doc_def.package.name}}">
+<!ENTITY package_string "{{doc_def.package.name}}">
+<!ENTITY version "{{doc_def.package.version}}">
+                '')
+            }
+        }
+
+        gtkdoc_rule = ''
+gtkdoc:
+{{tab}}$(Q)$(info GTK DOCUMENT)
+{{gen_cmds(gtkdoc_cmds)}}
+        ''
+        o.phony += " gtkdoc"
+    }
+
+    if o.cleandirs.length {
+        cleandirs = gen_cmds(cmd.rmdir(o.cleandirs.$to_str(" ")))
+    }
+
     File.store_text(config.outfile, ''
 Q ?= @
 O ?= {{outdir}}
@@ -527,13 +578,16 @@ clean:
 {{tab}}$(Q)$(info CLEAN)
 {{gen_cmds(cmd.rm("{o.products} {objs}"))}}
 
-cleanall:
+cleanall: clean
 {{tab}}$(Q)$(info CLEAN ALL)
-{{gen_cmds(cmd.rm("{o.products} {objs} {o.deps} {o.genfiles}"))}}
+{{gen_cmds(cmd.rm("{o.deps} {o.genfiles} {o.cleanfiles.$to_str(" ")}"))}}
+{{cleandirs}}
 
 cleanout:
 {{tab}}$(Q)$(info CLEAN OUT)
 {{gen_cmds(cmd.rmdir(config.outdir))}}
+
+{{gtkdoc_rule}}
 
 .PHONY: {{o.phony}}
     '')

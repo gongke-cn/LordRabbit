@@ -36,6 +36,8 @@ public config: {
     settings: {}
     cache: {}
     configh: []
+    gtkdocs: {}
+    package: null
 
     //Get the intermediate directory.
     intermediate: func {
@@ -69,6 +71,16 @@ public config: {
             path = normpath("{prefix}{config.currdir}/{prod.name}")
             this.genfiles[path] = prod
         }
+    }
+
+    ///Add Gtk document.
+    add_gtkdoc: func(def) {
+        old = this.gtkdocs[def.module]
+        if old {
+            throw ReferenceError(L"{def.location}: \"{def.module}\" is already declared at {old.location}")
+        }
+
+        this.gtkdocs[def.module] = def
     }
 
     //Add installation jobs.

@@ -429,3 +429,49 @@ public func_def_schema: JsonSchema({
         }
     ]
 })
+
+//JSON schema of gtk document rule.
+public gtkdoc_rule_schema: JsonSchema({
+    type: "object"
+    properties: {
+        module: {
+            type: "string"
+        }
+        srcdir: {
+            type: "string"
+        }
+        hdrs: {
+            type: "array"
+            items: {
+                type: "string"
+            }
+        }
+        formats: {
+            type: "array"
+            items: {
+                type: "string"
+            }
+        }
+    }
+    required: [
+        "module"
+        "hdrs"
+    ]
+})
+
+//JSON schema of package information.
+public package_schema: JsonSchema({
+    type: "object"
+    properties: {
+        name: {
+            type: "string"
+        }
+        version: {
+            type: "string"
+        }
+    }
+    required: [
+        "name"
+        "version"
+    ]
+})

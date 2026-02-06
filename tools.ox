@@ -102,6 +102,18 @@ ref "./exe_validator"
  *? @var src {String} The source of the test code.
  *? @var cxx {Bool} The file is a C++ library.
  *? @otype}
+ *?
+ *? @otype{ GtkDocRule Gtk document build rule.
+ *? @var module {String} The module name.
+ *? @var srcdir {String} Source directory.
+ *? @var hdrs {[String]} Header files.
+ *? @var formats {[String]} Document formats.
+ *? @otype}
+ *?
+ *? @otype{ Package Package information.
+ *? @var name {String} The package name.
+ *? @var version {String} The version number.
+ *? @otype}
  */
 
 //Solve the pcs.
@@ -883,4 +895,37 @@ public failed: func(msg) {
     loc = get_location()
 
     throw Error("{loc}: {msg}")
+}
+
+/*?
+ *? Generate document throw gtkdoc.
+ *? @param def {GtkDocRule} Rule to build gtk document.
+ */
+public gtkdoc: func(def) {
+    if config.job == Job.LISTOPT {
+        return
+    }
+
+    set_location(def)
+    validate(def, gtkdoc_rule_schema)
+
+    def.srcdir = get_full_path(def.srcdir)
+    def.hdrs = def.hdrs.$iter().map((get_full_path($))).to_array()
+    def.package = config.package
+
+    config.add_gtkdoc(def)
+}
+
+/*?
+ *? Set the package information.
+ *? @param def {Package} The package information.
+ */
+public package: func(def) {
+    if config.job == Job.LISTOPT {
+        return
+    }
+
+    validate(def, package_schema)
+
+    config.package = def
 }

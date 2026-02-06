@@ -2,7 +2,7 @@ ref "std/lang"
 
 {
     name: "lordrabbit"
-    version: "0.0.1"
+    version: "0.0.2"
     architecture: "all"
     description: {
         en: "LordRabbit - Project configuration and building tool"
@@ -31,6 +31,7 @@ ref "std/lang"
         "exe_validator"
         "c_validator"
         "shell_command"
+        "gtkdoc"
         "schema"
     ]
     system_files: {
