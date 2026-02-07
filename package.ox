@@ -36,8 +36,8 @@
     "%pkg%/schema.ox",
     "bin/lordrabbit",
     "%locale%/zh_CN/LC_MESSAGES/lordrabbit.mo",
-    "%doc%/md/lordrabbit/lordrabbit_tools.md",
     "%doc%/md/lordrabbit/lordrabbit.md",
+    "%doc%/md/lordrabbit/lordrabbit_tools.md",
     "%doc%/md/lordrabbit/lordrabbit_gnu.md",
     "%doc%/md/lordrabbit/lordrabbit_lordrabbit.md",
     "%pkg%/package.ox"

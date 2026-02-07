@@ -21,8 +21,9 @@ gen_makefile: func() {
     config.outdir = "$(O)"
 
     o: {
-        phony: "all clean cleanall cleanout install uninstall"
+        phony: "all prod doc clean cleanall cleanout install uninstall"
         products: ""
+        documents: ""
         rules: ""
         deps: ""
         genfiles: ""
@@ -385,27 +386,43 @@ gen_makefile: func() {
         ''
     }
 
-    inst_dirs = Set()
-
     //Add an installation.
     add_install: func(rule) {
         if o.install {
             o.install += "\n"
         }
 
-        dir = dirname(rule.dst)
-        inst_dirs.add(dir)
-
         if rule.symlink {
             o.install += cmd.symlink(rule.src, rule.dst)
         } else {
-            o.install += cmd.install(rule.src, rule.dst, rule.mode, rule.strip)
+            def = {
+                mode: rule.mode
+                strip: rule.strip
+            }
+
+            if rule.src {
+                def.src = rule.src
+            } elif rule.srcdir {
+                def.srcdir = rule.srcdir
+            }
+
+            if rule.dst {
+                def.dst = rule.dst
+            } elif rule.dstdir {
+                def.dstdir = rule.dstdir
+            }
+
+            o.install += cmd.install(def)
         }
 
         if o.uninstall {
             o.uninstall += "\n"
         }
-        o.uninstall += cmd.rm(rule.dst)
+        if rule.dst {
+            o.uninstall += cmd.rm(rule.dst)
+        } else {
+            o.uninstall += cmd.rmdir(rule.dstdir)
+        }
     }
 
     //Solve products.
@@ -430,9 +447,9 @@ gen_makefile: func() {
                 }
 
                 if def.rule == "dlib" {
-                    strip = "-s"
+                    strip = true
                 } else {
-                    strip = null
+                    strip = false
                 }
 
                 add_install({
@@ -467,20 +484,21 @@ gen_makefile: func() {
 
     //Solve installations.
     for config.install as inst {
-        for inst.srcs as file {
-            src = get_real_path(file)
-            base = basename(src)
-
-            add_install({
-                src
-                dst: "$(INST)/{inst.instdir}/{base}"
-                mode: inst.mode
-            })
+        def = {
+            src: get_real_path(inst.src)
+            srcdir: get_real_path(inst.srcdir)
+            mode: inst.mode
         }
-    }
 
-    if inst_dirs.length {
-        o.install = inst_dirs.$iter().map((cmd.mkdir($))).$to_str("\n") + "\n" + o.install
+        if inst.dst {
+            def.dst = "$(INST)/{inst.dst}"
+        }
+
+        if inst.dstdir {
+            def.dstdir = "$(INST)/{inst.dstdir}"
+        }
+
+        add_install(def)
     }
 
     //Solve objects.
@@ -497,52 +515,73 @@ gen_makefile: func() {
 
     objs = Object.keys(o.objs).$to_str(" ")
 
-    alltargets = o.products
-
     mktargets = basename(config.outfile)
     mkjobs = config.cli_args.$iter().map(("\"{$}\"")).$to_str(" ")
 
-    //Gtk document.
-    if Object.keys(config.gtkdocs).to_array().length {
-
-        gtkdoc = GtkDoc()
-
-        for Object.values(config.gtkdocs) as doc_def {
-            if gtkdoc_cmds {
-                gtkdoc_cmds += "\n"
-            }
-            gtkdoc_cmds += gtkdoc.build({
-                module: doc_def.module
-                srcdir: get_real_path(doc_def.srcdir)
-                hdrs: doc_def.hdrs.$iter().map((get_real_path($))).to_array()
-                formats: doc_def.formats
-            })
-
-            if doc_def.formats && doc_def.formats.length {
-                for doc_def.formats as fmt {
-                    o.cleandirs.push("{config.outdir}/gtkdoc/{doc_def.module}/{fmt}")
-                }
-            } else {
-                o.cleandirs.push("{config.outdir}/gtkdoc/{doc_def.module}/html")
-            }
-
-            if doc_def.package {
-                ent_file = "{outdir}/gtkdoc/{doc_def.module}/xml/gtkdocentities.ent"
-                mkdir_p(dirname(ent_file))
-                File.store_text(ent_file, ''
-<!ENTITY package_name "{{doc_def.package.name}}">
-<!ENTITY package_string "{{doc_def.package.name}}">
-<!ENTITY version "{{doc_def.package.version}}">
-                '')
-            }
+    //Generate GTK document.
+    gtkdoc = GtkDoc()
+    gen_gtkdoc: func(doc) {
+        if doc.instdir == "none" {
+            docdir = "{config.intermediate()}/{doc.id}"
+            real_docdir = "{outdir}/intermediate/{doc.id}"
+        } else {
+            docdir = "{config.outdir}/{doc.instdir}"
+            real_docdir = "{outdir}/{doc.instdir}"
         }
 
-        gtkdoc_rule = ''
-gtkdoc:
-{{tab}}$(Q)$(info GTK DOCUMENT)
-{{gen_cmds(gtkdoc_cmds)}}
+        docxml = "{docdir}/{doc.module}-docs.xml"
+
+        for doc.formats as fmt {
+            if doc.instdir != "none" {
+                add_install({
+                    srcdir: "{docdir}/{fmt}"
+                    dstdir: "$(INST)/{doc.instdir}/{fmt}"
+                    mode: "0644"
+                })
+            }
+
+            o.cleanfiles.push(docxml)
+            o.cleandirs.push("{docdir}/{fmt}")
+        }
+
+        if doc.package {
+            ent_file = "{real_docdir}/xml/gtkdocentities.ent"
+            mkdir_p(dirname(ent_file))
+            File.store_text(ent_file, ''
+<!ENTITY package_name "{{doc.package.name}}">
+<!ENTITY package_string "{{doc.package.name}}">
+<!ENTITY version "{{doc.package.version}}">
+            '')
+        }
+
+        def = {
+            module: doc.module
+            srcdir: get_real_path(doc.srcdir)
+            hdrs: doc.hdrs.$iter().map((get_real_path($))).to_array()
+            outdir: docdir
+            formats: doc.formats
+        }
+
+        o.phony += " {doc.id}"
+        o.rules += ''
+{{doc.id}}:
+{{tab}}$(Q)$(info GEN  GTK DOCUMENT)
+{{gen_cmds(gtkdoc.build(def))}}
+
         ''
-        o.phony += " gtkdoc"
+    }
+
+    //Document.
+    for Object.values(config.documents) as doc {
+        if doc.instdir != "none" {
+            o.documents += " {doc.id}"
+        }
+
+        case doc.rule {
+        "gtkdoc" {
+            gen_gtkdoc(doc)
+        }
+        }
     }
 
     if o.cleandirs.length {
@@ -556,7 +595,11 @@ CFLAGS ?=
 LDFLAGS ?=
 INST ?= {{config.instdir}}
 
-all: {{alltargets}}
+all: prod doc
+
+prod: {{o.products}}
+
+doc: {{o.documents}}
 
 {{mktargets}}: {{config.buildfiles.$iter().$to_str(" ")}}
 {{tab}}$(Q)$(info GEN  $@)
@@ -566,7 +609,7 @@ all: {{alltargets}}
 
 {{o.rules}}
 
-install: {{o.products}} uninstall
+install: uninstall
 {{tab}}$(Q)$(info INSTALL)
 {{gen_cmds(o.install)}}
 
@@ -586,8 +629,6 @@ cleanall: clean
 cleanout:
 {{tab}}$(Q)$(info CLEAN OUT)
 {{gen_cmds(cmd.rmdir(config.outdir))}}
-
-{{gtkdoc_rule}}
 
 .PHONY: {{o.phony}}
     '')

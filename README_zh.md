@@ -710,7 +710,6 @@ case option.model {
 }
 ```
 "add_option"函数调用通常出现在"lrbuild.ox"文件开头。
-
 ### config_h
 将全局宏定义输出到一个头文件中。
 
@@ -722,6 +721,49 @@ case option.model {
 
 参数为一个字符串，标识头文件名称。如果字符串以"+"开始，表示文件在输出目录下。如果字符串以"-"开始，表示文件在中间文件目录下。
 如果参数没有给出，缺省文件名为"config.h"。
+### package
+设置软件包信息。
+
+参数为一个表示软件包信息的对象，包含以下属性:
+
+* name: 软件包名称
+* version: 版本号
+
+如:
+```
+package({
+    name: "MyProject"
+    version: "0.0.1"
+})
+```
+### gtkdoc
+使用"gtkdoc"创建文档。
+
+参数为一个对象,包含以下属性。
+
+* module: 模块名
+* srcdir: 源文件目录, gtkdoc会扫描目录下的源文件获取文档信息
+* hdrs: 头文件列表，gtkdoc会加载头文件获取文档信息s
+* instdir: 安装目录。缺省为"share/doc/gtkdoc-PACKAGE-MODULE"。其中PACKAGE为软件包名，MODULE为模块名
+* formats: 输出文档格式列表，可以包含"html","man"或"pdf"。缺省为"html"
+
+如：
+```
+//为"MyModule"生成文档
+gtkdoc({
+    module: "MyModule"
+    srcdir: "src"
+    hdrs: [
+        "include/MyModule.h"
+    ]
+    instdir: "share/doc/MyModule"
+    //生成manual和HTML两种格式
+    formats: [
+        "man"
+        "html"
+    ]
+})
+```
 ## lordrabbit选项
 "lordrabbit"程序支持以下选项：
 
@@ -762,6 +804,8 @@ case option.model {
 |参数|说明|
 |:-|:-|
 |all|缺省目标，生成所有"lrbuild.ox"中指定的需要安装的产物|
+|prod|生成需要安装的二进制产物|
+|doc|生成文档|
 |install|将"lrbuild.ox"中定义的所有需要安装文件安装到安装目录下|
 |uninstall|从安装目录下清除已安装的文件|
 |clean|清除输出目录下所有"lrbuild.ox"中指定的需要安装的产物|

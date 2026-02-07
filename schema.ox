@@ -162,6 +162,9 @@ public install_rule_schema: JsonSchema({
                 type: "string"
             }
         }
+        srcdir: {
+            type: "string"
+        }
         instdir: {
             type: "string"
         }
@@ -451,6 +454,9 @@ public gtkdoc_rule_schema: JsonSchema({
             items: {
                 type: "string"
             }
+        }
+        instdir: {
+            type: "string"
         }
     }
     required: [

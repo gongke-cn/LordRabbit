@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-03 16:21+0800\n"
+"POT-Creation-Date: 2026-02-07 15:35+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tools.ox:150 tools.ox:150
+#: tools.ox:165 tools.ox:165
 msgid "$: argument is null"
 msgstr ""
 
-#: tools.ox:351 tools.ox:351
+#: tools.ox:376 tools.ox:376
 msgid "$: illegal toolchain \"$\""
 msgstr ""
 
-#: tools.ox:447 tools.ox:447
+#: tools.ox:472 tools.ox:472
 msgid "$: option \"$\" is already declared"
 msgstr ""
 
-#: tools.ox:458 tools.ox:458
+#: tools.ox:483 tools.ox:483
 msgid "$: \"$\" is not in option \"$\" valid values"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "cannot get target information from \"$\""
 msgstr ""
 
-#: config.ox:54 config.ox:54
+#: config.ox:56 config.ox:80 config.ox:56 config.ox:80
 msgid "$: \"$\" is already declared at $"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "load \"$\"\n"
 msgstr ""
 
-#: makefile.ox:93 makefile.ox:93 makefile.ox:93 makefile.ox:93
+#: makefile.ox:98 makefile.ox:98 makefile.ox:98 makefile.ox:98
 msgid "unknown source format \"$\""
 msgstr ""
 
@@ -67,6 +67,10 @@ msgstr ""
 
 #: validator.ox:33 validator.ox:33
 msgid "\"$\" is not valid"
+msgstr ""
+
+#: gtkdoc.ox:32 gtkdoc.ox:32 gtkdoc.ox:32
+msgid "illegal gtkdoc output format \"$\""
 msgstr ""
 
 #: lordrabbit.ox:28 lordrabbit.ox:28

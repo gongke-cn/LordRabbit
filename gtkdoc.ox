@@ -38,7 +38,7 @@ public GtkDoc: class {
                 @gen_cmds += "\n"
             }
 
-            dir = "{config.outdir}/gtkdoc/{def.module}/{fmt}"
+            dir = "{def.outdir}/{fmt}"
 
             @gen_cmds += ''
 {{shell.mkdir(dir)}}
@@ -46,20 +46,14 @@ cd {{dir}}; {{exe}} {{def.module}} ../{{def.module}}-docs.xml
             ''
         }
 
-        if def.formats && def.formats.length {
-            for def.formats as fmt {
-                gen_doc(fmt)
-            }
-        } else {
-            gen_doc("html")
+        for def.formats as fmt {
+            gen_doc(fmt)
         }
 
-        dir = "{config.outdir}/gtkdoc/{def.module}"
-
         return ''
-{{shell.mkdir(dir)}}
-{{this.scan}} --module {{def.module}} --source-dir {{def.srcdir}} --output-dir {{dir}} {{def.hdrs.$to_str(" ")}}
-TOP=`pwd`; cd {{dir}}; {{this.mkdb}} --module {{def.module}} --source-dir $$TOP/{{def.srcdir}}
+{{shell.mkdir(def.outdir)}}
+{{this.scan}} --module {{def.module}} --source-dir {{def.srcdir}} --output-dir {{def.outdir}} {{def.hdrs.$to_str(" ")}}
+cd {{def.outdir}}; {{this.mkdb}} --module {{def.module}} --source-dir $(realpath {{def.srcdir}})
 {{gen_cmds}}
         ''
     }

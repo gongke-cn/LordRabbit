@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: win 7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-03 16:21+0800\n"
+"POT-Creation-Date: 2026-02-07 15:35+0800\n"
 "PO-Revision-Date: 2026-02-03 16:08+0800\n"
 "Last-Translator: ke.gong <3188045634@qq.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tools.ox:150
+#: tools.ox:165
 msgid "$: argument is null"
 msgstr "$: 参数为null"
 
-#: tools.ox:351
+#: tools.ox:376
 msgid "$: illegal toolchain \"$\""
 msgstr "$: 无效的工具链\"$\""
 
-#: tools.ox:447
+#: tools.ox:472
 msgid "$: option \"$\" is already declared"
 msgstr "$: 选项\"$\"已声明"
 
-#: tools.ox:458
+#: tools.ox:483
 msgid "$: \"$\" is not in option \"$\" valid values"
 msgstr "$: \"$\"不是选项\"$\"的有效值"
 
@@ -36,7 +36,7 @@ msgstr "$: \"$\"不是选项\"$\"的有效值"
 msgid "cannot get target information from \"$\""
 msgstr "不能从\"$\"中获取目标平台信息"
 
-#: config.ox:54
+#: config.ox:56 config.ox:80
 msgid "$: \"$\" is already declared at $"
 msgstr "$: \"$\"已在位置$被声明"
 
@@ -52,7 +52,7 @@ msgstr "\"$\"不是一个普通文件"
 msgid "load \"$\"\n"
 msgstr "加载\"$\"\n"
 
-#: makefile.ox:93
+#: makefile.ox:98
 msgid "unknown source format \"$\""
 msgstr "未知的源文件格式\"$\""
 
@@ -67,6 +67,10 @@ msgstr "失败\n"
 #: validator.ox:33
 msgid "\"$\" is not valid"
 msgstr "\"$\"无效"
+
+#: gtkdoc.ox:32
+msgid "illegal gtkdoc output format \"$\""
+msgstr "无效的gtkdoc输出格式\"\""
 
 #: lordrabbit.ox:28
 msgid ""

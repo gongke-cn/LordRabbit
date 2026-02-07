@@ -53,7 +53,8 @@ ref "./exe_validator"
  *? @otype}
  *?
  *? @otype{ InstallRule Installation rule.
- *? @var srcs {[String]} source files.
+ *? @var srcs {[String]} Source files.
+ *? @var srcdir {String} Source directory.
  *? @var instdir {String} Installation directory.
  *? @otype}
  *?
@@ -108,6 +109,7 @@ ref "./exe_validator"
  *? @var srcdir {String} Source directory.
  *? @var hdrs {[String]} Header files.
  *? @var formats {[String]} Document formats.
+ *? @var instdir {String} Installation directory.
  *? @otype}
  *?
  *? @otype{ Package Package information.
@@ -326,13 +328,23 @@ public install: func(def) {
 
     def.rule = "install"
 
-    set_product(def)
-
-    if !def.mode {
-        def.mode = "644"
+    if def.srcs {
+        for def.srcs as src {
+            config.add_install({
+                src: get_full_path(src)
+                dst: "{def.instdir}/{src}"
+                mode: "0644"
+            })
+        }
     }
 
-    config.add_install(def)
+    if def.srcdir {
+        config.add_install({
+            srcdir: get_full_path(def.srcdir)
+            dstdir: def.instdir
+            mode: "0644"
+        })
+    }
 }
 
 /*?
@@ -909,11 +921,27 @@ public gtkdoc: func(def) {
     set_location(def)
     validate(def, gtkdoc_rule_schema)
 
+    if config.package {
+        pn = config.package.name
+        id = "gtkdoc-{pn}-{def.module}"
+    } else {
+        id = "gtkdoc-{def.module}"
+    }
+
+    if !def.instdir {
+        def.instdir = "share/doc/{id}"
+    }
+
+    def.rule = "gtkdoc"
     def.srcdir = get_full_path(def.srcdir)
     def.hdrs = def.hdrs.$iter().map((get_full_path($))).to_array()
     def.package = config.package
 
-    config.add_gtkdoc(def)
+    if !def.formats {
+        def.formats = ["html"]
+    }
+
+    config.add_doc(id, def)
 }
 
 /*?
