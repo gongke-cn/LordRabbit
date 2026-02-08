@@ -52,7 +52,7 @@ cd {{dir}}; {{exe}} {{def.module}} ../{{def.module}}-docs.xml
 
         return ''
 {{shell.mkdir(def.outdir)}}
-{{this.scan}} --module {{def.module}} --source-dir {{def.srcdir}} --output-dir {{def.outdir}} {{def.hdrs.$to_str(" ")}}
+{{this.scan}} --module {{def.module}} --source-dir {{def.srcdir}} --output-dir {{def.outdir}} --rebuild-sections --rebuild-types {{def.hdrs.$to_str(" ")}}
 cd {{def.outdir}}; {{this.mkdb}} --module {{def.module}} --source-dir $(realpath {{def.srcdir}})
 {{gen_cmds}}
         ''
