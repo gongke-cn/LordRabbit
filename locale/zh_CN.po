@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: win 7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-07 15:35+0800\n"
+"POT-Creation-Date: 2026-02-11 10:48+0800\n"
 "PO-Revision-Date: 2026-02-03 16:08+0800\n"
 "Last-Translator: ke.gong <3188045634@qq.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -15,30 +15,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: tools.ox:165
-msgid "$: argument is null"
-msgstr "$: 参数为null"
-
-#: tools.ox:376
-msgid "$: illegal toolchain \"$\""
-msgstr "$: 无效的工具链\"$\""
-
-#: tools.ox:472
-msgid "$: option \"$\" is already declared"
-msgstr "$: 选项\"$\"已声明"
-
-#: tools.ox:483
-msgid "$: \"$\" is not in option \"$\" valid values"
-msgstr "$: \"$\"不是选项\"$\"的有效值"
-
-#: gnu.ox:85
-msgid "cannot get target information from \"$\""
-msgstr "不能从\"$\"中获取目标平台信息"
-
-#: config.ox:56 config.ox:80
-msgid "$: \"$\" is already declared at $"
-msgstr "$: \"$\"已在位置$被声明"
 
 #: inner_tools.ox:14
 msgid "cannot find \"$\""
@@ -48,29 +24,45 @@ msgstr "找不到\"$\""
 msgid "\"$\" is not a regular file"
 msgstr "\"$\"不是一个普通文件"
 
-#: inner_tools.ox:21
+#: inner_tools.ox:21 lordrabbit.ox:226
 msgid "load \"$\"\n"
 msgstr "加载\"$\"\n"
-
-#: makefile.ox:98
-msgid "unknown source format \"$\""
-msgstr "未知的源文件格式\"$\""
 
 #: validator.ox:17
 msgid "check \"$\": "
 msgstr "检测\"$\": "
 
-#: validator.ox:21
+#: validator.ox:25
 msgid "failed\n"
 msgstr "失败\n"
 
-#: validator.ox:33
+#: validator.ox:37
 msgid "\"$\" is not valid"
 msgstr "\"$\"无效"
 
-#: gtkdoc.ox:32
+#: gtkdoc.ox:36
 msgid "illegal gtkdoc output format \"$\""
-msgstr "无效的gtkdoc输出格式\"\""
+msgstr "无效的gtkdoc输出格式\"$\""
+
+#: gnu.ox:86
+msgid "cannot get target information from \"$\""
+msgstr "不能从\"$\"中获取目标平台信息"
+
+#: compile.ox:146
+msgid "$: library \"$\" is not defined"
+msgstr "$: 库\"$\"没有定义"
+
+#: config_h.ox:36 lordrabbit.ox:250
+msgid "store \"$\"\n"
+msgstr "保存\"$\"\n"
+
+#: option.ox:137
+msgid "$: option \"$\" is already declared"
+msgstr "$: 选项\"$\"已声明"
+
+#: option.ox:148
+msgid "$: \"$\" is not in option \"$\" valid values"
+msgstr "$: \"$\"不是选项\"$\"的有效值"
 
 #: lordrabbit.ox:28
 msgid ""
@@ -158,10 +150,10 @@ msgstr "显示帮助信息"
 msgid "cannot find valid generator"
 msgstr "找不到有效的生成器"
 
-#: lordrabbit.ox:228
+#: lordrabbit.ox:229
 msgid "\"$\" is not valid\n"
 msgstr "\"$\"无效\n"
 
-#: lordrabbit.ox:244
+#: lordrabbit.ox:255
 msgid "generate \"$\"\n"
 msgstr "生成\"$\"\n"

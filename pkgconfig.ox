@@ -3,6 +3,7 @@ ref "./log"
 ref "./tools"
 ref "./validator"
 ref "./exe_validator"
+ref "./output_validator"
 
 //Wrapper of "pkg-config".
 public PkgConfig: class ExeValidator {
@@ -41,6 +42,10 @@ PkgConfigValidator: class Validator {
             pkgconfig
             module
             min_version: version
+            #exists: OutputValidator("{pkgconfig} {module} --exists")
+            #version: OutputValidator("{pkgconfig} {module} --modversion")
+            #cflags: OutputValidator("{pkgconfig} {module} --cflags")
+            #libs: OutputValidator("{pkgconfig} {module} --libs")
         }
     }
 
@@ -48,17 +53,15 @@ PkgConfigValidator: class Validator {
     check() {
         this.pkgconfig.assert()
 
-        cmd = "{this.pkgconfig} --exists {this.module}"
-        r = Shell.run(cmd)
-        if r != 0 {
+        if !this.#exists.valid {
             return null
         }
 
         desc = this.module
 
         if this.min_version {
-            cmd = "{this.pkgconfig} {this.module} --modversion"
-            version = Shell.output(cmd).trim()
+            this.#version.assert()
+            version = this.#version.value
 
             curr = (version ~ /\d+(\.\d+)*/).split(".").to_array()
             min = (this.min_version ~ /\d+(\.\d+)*/).split(".").to_array()
@@ -99,43 +102,20 @@ PkgConfigValidator: class Validator {
         return desc
     }
 
-    //Get the version number.
-    version {
-        if this.#version == null {
-            this.assert()
-
-            cmd = "{this.pkgconfig} {this.module} --modversion"
-
-            this.#version = Shell.output(cmd).trim()
-        }
-
-        return this.#version
-    }
-
     //Get the C flags.
     cflags {
-        if this.#cflags == null {
-            this.assert()
+        this.assert()
+        this.#cflags.assert()
 
-            cmd = "{this.pkgconfig} {this.module} --cflags"
-
-            this.#cflags = Shell.output(cmd).trim()
-        }
-
-        return this.#cflags
+        return this.#cflags.value
     }
 
     //Get the linker flags.
     libs {
-        if this.#libs == null {
-            this.assert()
+        this.assert()
+        this.#libs.assert()
 
-            cmd = "{this.pkgconfig} {this.module} --libs"
-
-            this.#libs = Shell.output(cmd).trim()
-        }
-
-        return this.#libs
+        return this.#libs.value
     }
 
     //Get the tag.

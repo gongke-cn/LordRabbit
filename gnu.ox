@@ -17,6 +17,7 @@ ref "./shell_command"
  *? @var dep {String} The dependency file.
  *? @var cflags {String} The compile flags.
  *? @var incdirs {[String]} The include directories.
+ *? @var incs {[String]} Include header files.
  *? @var macros {[String]} The macro definitions.
  *? @var pic {Bool} Enable PIC flag.
  *? @otype}
@@ -128,11 +129,15 @@ public GnuToolchain: class {
             macros = def.macros.$iter().map(("-D{$}")).$to_str(" ")
         }
 
+        if def.incs {
+            incs = def.incs.$iter().map(("-include {$}")).$to_str(" ")
+        }
+
         if config.debug {
             gflag = "-g"
         }
 
-        return "{this.cc} -c -o {def.obj} {def.src} {depflags} {picflags} {macros} {incdirs} {def.cflags} {gflag}"
+        return "{this.cc} -c -o {def.obj} {def.src} {depflags} {picflags} {macros} {incdirs} {incs} {def.cflags} {gflag}"
     }
 
     /*?

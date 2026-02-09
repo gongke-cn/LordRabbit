@@ -13,39 +13,67 @@ public Windows: {
     //Suffix of static library.
     slib_suffix: ".a"
     //Suffix of dynamic library.
-    dlib_suffix: ".dll"
+    dlib_suffix: ".dll.a"
 
     //Build dynamic library.
-    build_dlib: func(def) {
+    build_dlib: func(def, objs, solve_dep_libs) {
         if def.version {
-            dll = "lib{def.name}-{def.version}{this.dlib_suffix}"
+            dllbase = "lib{def.name}-{def.version}.dll"
         } else {
-            dll = "lib{def.name}{this.dlib_suffix}"
+            dllbase = "lib{def.name}.dll"
         }
 
-        if def.exeinstdir == "none" {
-            instpath = "-{normpath("{config.currdir}/{dll}")}"
-        } else {
-            instpath = "+{normpath("{def.exeinstdir}/{dll}")}"
+        dll = normpath("{get_outdir()}/{get_currdir()}/{dllbase}")
+        lib = normpath("{get_outdir()}/{get_currdir()}/lib{def.name}.dll.a")
+
+        tc = toolchain()
+
+        if def.pcs {
+            pc_libs = def.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
         }
 
-        config.add_product(instpath, def)
+        li = solve_libs(def.libs)
 
-        lib = "lib{def.name}{this.dlib_suffix}{this.slib_suffix}"
-
-        if def.instdir == "none" {
-            def.slib = "-{normpath("{config.currdir}/{lib}")}"
-        } else {
-            def.slib = "+{normpath("{def.instdir}/{lib}")}"
-        }
-
-        def.libpath = def.slib
-
-        config.add_product(def.slib, {
-            rule: "none"
-            instdir: def.instdir
+        linkcmd = tc.objs2dlib({
+            objs
+            lib: dll
+            slib: lib
+            libdirs: [...li.libdirs, ...get_paths(def.libdirs), ...get_libdirs()]
+            libs: [...li.libs, ...get_libs()]
+            ldflags: "{def.ldflags} {pc_libs} {get_ldflags()}"
+            cxx: def.cxx
         })
 
-        def.instdir = def.exeinstdir
+        cmd = shell()
+
+        rule = {
+            srcs: objs
+            dsts: [dll, lib]
+            cmd: ''
+{{cmd.mkdir(dirname(dll))}}
+{{cmd.mkdir(dirname(lib))}}
+{{linkcmd}}
+            ''
+        }
+
+        add_rule(rule)
+        solve_dep_libs(rule, li.deplibs)
+
+        if def.instdir != "none" {
+            add_install({
+                src: lib
+                dst: normpath("{get_instdir()}/{def.instdir}/lib{def.name}.dll.a")
+                mode: "0644"
+            })
+        }
+
+        if def.exeinstdir != "none" {
+            add_install({
+                src: dll
+                dst: normpath("{get_instdir()}/{def.instdir}/{dllbase}")
+                mode: "0644"
+                strip: true
+            })
+        }
     }
 }

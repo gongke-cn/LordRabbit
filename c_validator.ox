@@ -25,8 +25,8 @@ public CCValidator: class Validator {
     //Check the result.
     check() {
         target = this.toolchain.target
-        #src_file = TempFile("{config.outdir}/intermediate/lrtest.c")
-        #obj_file = TempFile("{config.outdir}/intermediate/lrtest.o")
+        #src_file = TempFile("{config.outdir}/c_validator/lrtest.c")
+        #obj_file = TempFile("{config.outdir}/c_validator/lrtest.o")
 
         mkdir_p(dirname(src_file))
         File.store_text(src_file, this.src)
@@ -79,9 +79,9 @@ public CLinkValidator: class Validator {
     //Check the result.
     check() {
         target = this.toolchain.target
-        #src_file = TempFile("{config.outdir}/intermediate/lrest.c")
-        #obj_file = TempFile("{config.outdir}/intermediate/lrtest.o")
-        #exe_file = TempFile("{config.outdir}/intermediate/lrtest{target.exe_suffix}")
+        #src_file = TempFile("{config.outdir}/c_validator/lrest.c")
+        #obj_file = TempFile("{config.outdir}/c_validator/lrtest.o")
+        #exe_file = TempFile("{config.outdir}/c_validator/lrtest{target.exe_suffix}")
 
         mkdir_p(dirname(src_file))
         File.store_text(src_file, this.src)

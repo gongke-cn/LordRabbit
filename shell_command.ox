@@ -45,7 +45,7 @@ public ShellCommand: {
         if def.src && def.dst {
             return "install -D -T {mflag} {strip} {def.src} {def.dst}"
         } elif def.src && def.dstdir {
-            return "install -D {mflag} {strip} {def.src} -t {def.dst}"
+            return "install -D {mflag} {strip} {def.src} -t {def.dstdir}"
         } else {
             return "find {def.srcdir} -type f -execdir install -D -T {mflag} {strip} \{\} {def.dstdir}/\{\} \\;"
         }

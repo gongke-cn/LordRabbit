@@ -1,10 +1,14 @@
+ref "json/json_schema"
+ref "std/fs"
+ref "std/io"
+ref "std/path"
 ref "./exe_validator"
 ref "./shell_command"
-ref "./config"
+ref "./basic"
 ref "./log"
 
 //GtkDoc.
-public GtkDoc: class {
+GtkDoc: class {
     //Initialize.
     $init() {
         this.{
@@ -50,11 +54,127 @@ cd {{dir}}; {{exe}} {{def.module}} ../{{def.module}}-docs.xml
             gen_doc(fmt)
         }
 
+        if def.srcdirs {
+            srcdirs = def.srcdirs.$iter().map(("--source-dir $(realpath {$})")).$to_str(" ")
+        }
+
         return ''
 {{shell.mkdir(def.outdir)}}
-{{this.scan}} --module {{def.module}} --source-dir {{def.srcdir}} --output-dir {{def.outdir}} --rebuild-sections --rebuild-types {{def.hdrs.$to_str(" ")}}
-cd {{def.outdir}}; {{this.mkdb}} --module {{def.module}} --source-dir $(realpath {{def.srcdir}})
+{{this.scan}} --module {{def.module}} {{srcdirs}} --output-dir {{def.outdir}} --rebuild-sections --rebuild-types {{def.hdrs.$to_str(" ")}}
+cd {{def.outdir}}; {{this.mkdb}} --module {{def.module}} --source-dir $(realpath {{srcdirs}})
 {{gen_cmds}}
         ''
+    }
+}
+
+//JSON schema of GtkDoc rule.
+gtkdoc_rule_schema: JsonSchema({
+    type: "object"
+    properties: {
+        module: {
+            type: "string"
+        }
+        srcdirs: {
+            type: "array"
+            items: {
+                type: "string"
+            }
+        }
+        hdrs: {
+            type: "array"
+            items: {
+                type: "string"
+            }
+        }
+        instdir: {
+            type: "string"
+        }
+        formats: {
+            type: "array"
+            items: {
+                type: "string"
+            }
+        }
+    }
+    required: [
+        "module"
+    ]
+})
+
+gtkdoc_inst = GtkDoc()
+
+/*?
+ *? Generate document throw gtkdoc.
+ *? @param def {GtkDocRule} Rule to build gtk document.
+ */
+public gtkdoc: func(def) {
+    if !running() {
+        return
+    }
+
+    try {
+        gtkdoc_rule_schema.validate_throw(def)
+    } catch e {
+        throw Error("{get_location()}: {e}")
+    }
+
+    pi = get_package()
+
+    if pi {
+        id = "gtkdoc-{pi.name}-{def.module}"
+    } else {
+        id = "gtkdoc-{def.module}"
+    }
+
+    outdir = "{get_outdir()}/{get_currdir()}/{id}"
+
+    if pi {
+        entfile = "{outdir}/xml/gtkdocentities.ent"
+        mkdir_p(dirname(entfile))
+        File.store_text(entfile, ''
+<!ENTITY package_name "{{pi.name}}">
+<!ENTITY package_string "{{pi.name}}">
+<!ENTITY version "{{pi.version}}">
+        '')
+    }
+
+    if !def.instdir {
+        def.instdir = "share/doc/{id}"
+    }
+
+    if !def.formats {
+        def.formats = ["html"]
+    }
+
+    dsts = []
+
+    for def.formats as fmt {
+        dsts.push("{outdir}/{fmt}/")
+    }
+
+    cmd = gtkdoc_inst.build({
+        module: def.module
+        outdir
+        srcdirs: get_paths(def.srcdirs)
+        hdrs: get_paths(def.hdrs)
+        formats: def.formats
+    })
+
+    add_rule({
+        phony: id
+        dsts
+        cmd
+    })
+
+    add_product(id)
+
+    if def.instdir != "none" {
+        for def.formats as fmt {
+            add_install({
+                srcdir: "{outdir}/{fmt}"
+                dstdir: "{get_instdir()}/{def.instdir}/{fmt}"
+                mode: "0644"
+            })
+        }
     }
 }

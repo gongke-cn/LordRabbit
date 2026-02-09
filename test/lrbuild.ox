@@ -30,7 +30,7 @@ if have_h("stdio.h") {
 build_exe({
     name: "lrtest"
     libs: [
-        "lrtest"
+        "+lrtest"
     ]
     pcs: [
         if option.enable_libcurl {
@@ -39,9 +39,6 @@ build_exe({
         if option.enable_ncurses {
             "ncursesw"
         }
-    ]
-    incdirs: [
-        "-"
     ]
     srcs: [
         "main.c"
@@ -55,12 +52,12 @@ build_lib({
     name: "lrtest"
     version: "0"
     libs: [
-        "sub1"
-        "sub2"
+        "+sub1/sub1"
+        "+sub2/sub2"
     ]
     srcs: [
-	    "lib.c"
-        "-gen.c"
+	"lib.c"
+        "+gen.c"
     ]
 })
 
@@ -81,8 +78,8 @@ install({
     instdir: "include/lrtest"
     srcs: [
         "test.h"
-        "-config.h"
+        "+config.h"
     ]
 })
 
-config_h("-config.h")
+config_h("+config.h")

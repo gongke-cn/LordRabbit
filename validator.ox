@@ -14,9 +14,13 @@ public Validator: class {
                 config.cache[this.tag] = this.#value
             }
 
-            stdout.puts(L"check \"{this}\": ")
+            stdout.puts(L"check \"{this.desc}\": ")
             if this.#value != null {
-                stdout.puts("{this.#value}\n")
+                result = this.#value
+                if result == "" {
+                    result = "ok"
+                }
+                stdout.puts("{result}\n")
             } else {
                 stdout.puts(L"failed\n")
             }
@@ -24,7 +28,7 @@ public Validator: class {
             this.#tested = true
         }
 
-        return this.#value
+        return this.#value != null
     }
 
     //Assert the validator is valid.
@@ -46,5 +50,10 @@ public Validator: class {
     //Get the tag.
     tag {
         return "{Object.get_name(this.$class)}:{this}"
+    }
+
+    //Get the description of the tag.
+    desc {
+        return this.$to_str()
     }
 }

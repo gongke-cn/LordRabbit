@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-07 15:35+0800\n"
+"POT-Creation-Date: 2026-02-11 10:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,30 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: tools.ox:165 tools.ox:165
-msgid "$: argument is null"
-msgstr ""
-
-#: tools.ox:376 tools.ox:376
-msgid "$: illegal toolchain \"$\""
-msgstr ""
-
-#: tools.ox:472 tools.ox:472
-msgid "$: option \"$\" is already declared"
-msgstr ""
-
-#: tools.ox:483 tools.ox:483
-msgid "$: \"$\" is not in option \"$\" valid values"
-msgstr ""
-
-#: gnu.ox:85 gnu.ox:85
-msgid "cannot get target information from \"$\""
-msgstr ""
-
-#: config.ox:56 config.ox:80 config.ox:56 config.ox:80
-msgid "$: \"$\" is already declared at $"
-msgstr ""
 
 #: inner_tools.ox:14 inner_tools.ox:14
 msgid "cannot find \"$\""
@@ -49,28 +25,44 @@ msgstr ""
 msgid "\"$\" is not a regular file"
 msgstr ""
 
-#: inner_tools.ox:21 inner_tools.ox:21
+#: inner_tools.ox:21 inner_tools.ox:21 lordrabbit.ox:226
 msgid "load \"$\"\n"
-msgstr ""
-
-#: makefile.ox:98 makefile.ox:98 makefile.ox:98 makefile.ox:98
-msgid "unknown source format \"$\""
 msgstr ""
 
 #: validator.ox:17 validator.ox:17
 msgid "check \"$\": "
 msgstr ""
 
-#: validator.ox:21 validator.ox:21
+#: validator.ox:25 validator.ox:25
 msgid "failed\n"
 msgstr ""
 
-#: validator.ox:33 validator.ox:33
+#: validator.ox:37 validator.ox:37
 msgid "\"$\" is not valid"
 msgstr ""
 
-#: gtkdoc.ox:32 gtkdoc.ox:32 gtkdoc.ox:32
+#: gtkdoc.ox:36 gtkdoc.ox:36 gtkdoc.ox:36
 msgid "illegal gtkdoc output format \"$\""
+msgstr ""
+
+#: gnu.ox:86 gnu.ox:86
+msgid "cannot get target information from \"$\""
+msgstr ""
+
+#: compile.ox:146 compile.ox:146 compile.ox:146
+msgid "$: library \"$\" is not defined"
+msgstr ""
+
+#: config_h.ox:36 config_h.ox:36 lordrabbit.ox:250
+msgid "store \"$\"\n"
+msgstr ""
+
+#: option.ox:137 option.ox:137
+msgid "$: option \"$\" is already declared"
+msgstr ""
+
+#: option.ox:148 option.ox:148
+msgid "$: \"$\" is not in option \"$\" valid values"
 msgstr ""
 
 #: lordrabbit.ox:28 lordrabbit.ox:28
@@ -149,10 +141,10 @@ msgstr ""
 msgid "cannot find valid generator"
 msgstr ""
 
-#: lordrabbit.ox:228
+#: lordrabbit.ox:229
 msgid "\"$\" is not valid\n"
 msgstr ""
 
-#: lordrabbit.ox:244
+#: lordrabbit.ox:255
 msgid "generate \"$\"\n"
 msgstr ""

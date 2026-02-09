@@ -17,7 +17,7 @@ ref "std/lang"
     ]
     libraries: [
         "tools"
-        "gnu"
+        "validator"
     ]
     internal_libraries: [
         "log"
@@ -27,12 +27,18 @@ ref "std/lang"
         "windows"
         "linux"
         "pkgconfig"
-        "validator"
-        "exe_validator"
-        "c_validator"
         "shell_command"
         "gtkdoc"
-        "schema"
+        "gnu"
+        "basic"
+        "compile"
+        "config_h"
+        "gen_file"
+        "test"
+        "option"
+        "exe_validator"
+        "c_validator"
+        "output_validator"
     ]
     system_files: {
         if OX.os == "windows" {

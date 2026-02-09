@@ -1,6 +1,6 @@
 ref "std/path"
 ref "./log"
-ref "./config"
+ref "./basic"
 
 //Linux target.
 public Linux: {
@@ -14,38 +14,76 @@ public Linux: {
     dlib_suffix: ".so"
 
     //Build dynamic library.
-    build_dlib: func(def) {
+    build_dlib: func(def, objs, solve_dep_libs) {
         if def.version {
-            lib = "lib{def.name}{this.dlib_suffix}.{def.version}"
+            libbase = "lib{def.name}{this.dlib_suffix}.{def.version}"
         } else {
-            lib = "lib{def.name}{this.dlib_suffix}"
+            libbase = "lib{def.name}{this.dlib_suffix}"
         }
 
-        if def.instdir == "none" {
-            instpath = "-{config.currdir}/{lib}"
-            def.libpath = "-{normpath("{config.currdir}/lib{def.name}{this.dlib_suffix}")}"
-        } else {
-            instpath = "+{def.instdir}/{lib}"
-            def.libpath = "+{normpath("{def.instdir}/lib{def.name}{this.dlib_suffix}")}"
+        lib = normpath("{get_outdir()}/{get_currdir()}/{libbase}")
+
+        tc = toolchain()
+        cmd = shell()
+
+        if def.pcs {
+            pc_libs = def.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
         }
 
-        config.add_product(instpath, def)
+        li = solve_libs(def.libs)
+
+        linkcmd = tc.objs2dlib({
+            objs
+            lib
+            libdirs: [...li.libdirs, ...get_paths(def.libdirs), ...get_libdirs()]
+            libs: [...li.libs, ...get_libs()]
+            ldflags: "{def.ldflags} {pc_libs} {get_ldflags()}"
+            cxx: def.cxx
+        })
+
+        rule = {
+            srcs: objs
+            dsts: [lib]
+            cmd: ''
+{{cmd.mkdir(dirname(lib))}}
+{{linkcmd}}
+            ''
+        }
+
+        add_rule(rule)
+        solve_dep_libs(rule, li.deplibs)
 
         if def.version {
-            link = "lib{def.name}{this.dlib_suffix}"
+            cmd = shell()
 
-            if def.instdir == "none" {
-                linkpath = "-{normpath("{config.currdir}/{link}")}"
-            } else {
-                linkpath = "+{normpath("{def.instdir}/{link}")}"
-            }
+            link = normpath("{dirname(lib)}/lib{def.name}{this.dlib_suffix}")
 
-            config.add_product(linkpath, {
-                rule: "symlink"
-                instdir: def.instdir
-                target: lib
-                dep: instpath
+            add_rule({
+                srcs: [lib]
+                dsts: [link]
+                cmd: cmd.symlink(libbase, link)
             })
+        }
+
+        if def.instdir != "none" {
+            instlib = normpath("{get_instdir()}/{def.instdir}/{libbase}")
+
+            add_install({
+                src: lib
+                dst: instlib
+                mode: "0644"
+                strip: true
+            })
+
+            if def.version {
+                instlnk = normpath("{dirname(instlib)}/lib{def.name}{this.dlib_suffix}")
+
+                add_install({
+                    src: libbase
+                    dst: instlnk
+                    symlink: true
+                })
+            }
         }
     }
 }

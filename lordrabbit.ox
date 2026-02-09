@@ -187,7 +187,7 @@ if config.job == Job.HELP {
 }
 
 //Path of the cache file.
-cache_path: "{config.outdir}/intermediate/lrcache.ox"
+cache_path: "{config.outdir}/lrcache.ox"
 
 if config.job == Job.CONFIG {
     config.cli_args = argv
@@ -223,23 +223,34 @@ if config.job == Job.CONFIG {
         try {
             if Path(cache_path).exist {
                 config.cache = JSON.from_file(cache_path)
+                stdout.puts(L"load \"{cache_path}\"\n")
             }
         } catch err {
             stdout.puts(L"\"{cache_path}\" is not valid\n")
             config.cache = {}
         }
     }
+
+    //Prepare.
+    config.generator.prepare()
 }
 
 //Run the "./lrbuild.ox"
 run_lr_build(".")
 
 if config.job == Job.CONFIG {
-    config.generator.generate()
+    //Run jobs.
+    for config.jobs as job {
+        job()
+    }
 
     //Store the cache file.
     mkdir_p(dirname(cache_path))
     File.store_text(cache_path, JSON.to_str(config.cache, "  "))
+    stdout.puts(L"store \"{cache_path}\"\n")
+    
+    //Generate the output file.
+    config.generator.generate()
 
     stdout.puts(L"generate \"{config.outfile}\"\n")
 } elif config.job == Job.LISTOPT {
