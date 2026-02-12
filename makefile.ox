@@ -118,7 +118,7 @@ all: {{config.products.$to_str(" ")}}
 
 {{this.rules}}
 
-install: all uninstall
+install: uninstall
 {{tab}}$(info INSTALL)
 {{make_cmd(config.install)}}
 
