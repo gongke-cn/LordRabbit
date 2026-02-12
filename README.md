@@ -1116,6 +1116,7 @@ Note that the elements of the parameters "srcs" and "dsts" are real pathnames, n
 
 For general rules, "srcs" and "dsts" correspond to real input and output file paths. Sometimes we cannot determine the specific input and output files. In this case, we can define the rule as a phony rule. Set the "phony" property to a string to indicate that this is a phony rule, and "lordrabbit" will control the rule through this phony rule name.
 
+The output file path specified by "dsts", if it ends with a "/", indicates that a directory has been generated.
 ### running
 Check if the configurator is running.
 

@@ -55,13 +55,34 @@ cd {{dir}}; {{exe}} {{def.module}} ../{{def.module}}-docs.xml
         }
 
         if def.srcdirs {
-            srcdirs = def.srcdirs.$iter().map(("--source-dir $(realpath {$})")).$to_str(" ")
+            srcdirs = def.srcdirs.$iter().map(("--source-dir $TOP/{$}")).$to_str(" ")
+        }
+
+        head = shell.mkdir(def.outdir)
+
+        pi = get_package()
+        if pi {
+            srcfile = "{get_outdir()}/{get_currdir()}/gtkdocentities.ent"
+            entfile = "{def.outdir}/xml/gtkdocentities.ent"
+
+            mkdir_p(dirname(srcfile))
+            File.store_text(srcfile, ''
+<!ENTITY package_name "{{pi.name}}">
+<!ENTITY package_string "{{pi.name}}">
+<!ENTITY version "{{pi.version}}">
+            '')
+            head += "\n"
+            head += shell.install({
+                src: srcfile
+                dst: entfile
+                mode: "0644"
+            })
         }
 
         return ''
-{{shell.mkdir(def.outdir)}}
-{{this.scan}} --module {{def.module}} {{srcdirs}} --output-dir {{def.outdir}} --rebuild-sections --rebuild-types {{def.hdrs.$to_str(" ")}}
-cd {{def.outdir}}; {{this.mkdb}} --module {{def.module}} --source-dir $(realpath {{srcdirs}})
+{{head}}
+TOP=`pwd`; {{this.scan}} --module {{def.module}} {{srcdirs}} --output-dir {{def.outdir}} --rebuild-sections --rebuild-types {{def.hdrs.$to_str(" ")}}
+TOP=`pwd`; cd {{def.outdir}}; {{this.mkdb}} --module {{def.module}} {{srcdirs}}
 {{gen_cmds}}
         ''
     }
@@ -128,28 +149,12 @@ public gtkdoc: func(def) {
 
     outdir = "{get_outdir()}/{get_currdir()}/{id}"
 
-    if pi {
-        entfile = "{outdir}/xml/gtkdocentities.ent"
-        mkdir_p(dirname(entfile))
-        File.store_text(entfile, ''
-<!ENTITY package_name "{{pi.name}}">
-<!ENTITY package_string "{{pi.name}}">
-<!ENTITY version "{{pi.version}}">
-        '')
-    }
-
     if !def.instdir {
         def.instdir = "share/doc/{id}"
     }
 
     if !def.formats {
         def.formats = ["html"]
-    }
-
-    dsts = []
-
-    for def.formats as fmt {
-        dsts.push("{outdir}/{fmt}/")
     }
 
     cmd = gtkdoc_inst.build({
@@ -162,7 +167,7 @@ public gtkdoc: func(def) {
 
     add_rule({
         phony: id
-        dsts
+        dsts: ["{outdir}/"]
         cmd
     })
 

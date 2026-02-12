@@ -74,21 +74,21 @@ out/sub2/sub2-slib-sub2.o: sub2/sub2.c
 
 install: all uninstall
 	$(info INSTALL)
-	$(Q)install -D -T -m 0755 -s out/lrtest $(INST)/bin/lrtest
-	$(Q)install -D -T -m 0644  out/liblrtest.a $(INST)/lib/lrtest.a
-	$(Q)install -D -T -m 0644 -s out/liblrtest.so.0 $(INST)/lib/liblrtest.so.0
-	$(Q)ln -s -f liblrtest.so.0 $(INST)/lib/liblrtest.so
-	$(Q)install -D   test.h -t $(INST)/include/lrtest
-	$(Q)install -D   out/config.h -t $(INST)/include/lrtest
+	$(Q)install -D -T -m 0755 -s out/lrtest $$(INST)/bin/lrtest
+	$(Q)install -D -T -m 0644  out/liblrtest.a $$(INST)/lib/lrtest.a
+	$(Q)install -D -T -m 0644 -s out/liblrtest.so.0 $$(INST)/lib/liblrtest.so.0
+	$(Q)ln -s -f liblrtest.so.0 $$(INST)/lib/liblrtest.so
+	$(Q)install -D   test.h -t $$(INST)/include/lrtest
+	$(Q)install -D   out/config.h -t $$(INST)/include/lrtest
 
 uninstall:
 	$(info UNINSTALL)
-	$(Q)rm -f $(INST)/bin/lrtest
-	$(Q)rm -f $(INST)/lib/lrtest.a
-	$(Q)rm -f $(INST)/lib/liblrtest.so.0
-	$(Q)rm -f $(INST)/lib/liblrtest.so
-	$(Q)rm -f $(INST)/include/lrtest/test.h
-	$(Q)rm -f $(INST)/include/lrtest/config.h
+	$(Q)rm -f $$(INST)/bin/lrtest
+	$(Q)rm -f $$(INST)/lib/lrtest.a
+	$(Q)rm -f $$(INST)/lib/liblrtest.so.0
+	$(Q)rm -f $$(INST)/lib/liblrtest.so
+	$(Q)rm -f $$(INST)/include/lrtest/test.h
+	$(Q)rm -f $$(INST)/include/lrtest/config.h
 
 clean:
 	$(info CLEAN)

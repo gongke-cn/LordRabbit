@@ -43,6 +43,10 @@ Makefile: class ExeValidator {
         tab = "\t"
         cmd = shell()
 
+        make_cmd: func(src) {
+            return src.split("\n").map(("\t$(Q){$.replace("$", "$$$$")}")).$to_str("\n")
+        }
+
         for config.rules as rule {
             targets = null
             srcs = null
@@ -83,7 +87,7 @@ Makefile: class ExeValidator {
             this.rules += ''
 {{targets}}: {{srcs}}
 {{tab}}$(info BUILD {{targets}} <= {{srcs}})
-{{rule.cmd.split("\n").map(("\t$(Q){$}")).$to_str("\n")}}
+{{make_cmd(rule.cmd)}}
 
 
             ''
@@ -92,14 +96,14 @@ Makefile: class ExeValidator {
         clean_cmd = null
 
         if this.clean {
-            clean_cmd = "\t$(Q){cmd.rm(this.clean)}"
+            clean_cmd = make_cmd(cmd.rm(this.clean))
         }
 
         if this.cleandir {
             if clean_cmd {
                 clean_cmd += "\n"
             }
-            clean_cmd += "\t$(Q){cmd.rmdir(this.cleandir)}"
+            clean_cmd += make_cmd(cmd.rmdir(this.cleandir))
         }
 
         File.store_text(config.outfile, ''
@@ -110,7 +114,7 @@ all: {{config.products.$to_str(" ")}}
 
 {{config.outfile}}: {{config.buildfiles.$to_str(" ")}}
 {{tab}}$(info CONFIG $@)
-{{tab}}$(Q){{config.cli_args.$iter().map(("\"{$}\"")).$to_str(" ")}}
+{{make_cmd(config.cli_args.$iter().map(("\"{$}\"")).$to_str(" "))}}
 
 -include {{this.deps}}
 
@@ -118,11 +122,11 @@ all: {{config.products.$to_str(" ")}}
 
 install: all uninstall
 {{tab}}$(info INSTALL)
-{{config.install.split("\n").map(("\t$(Q){$}")).$to_str("\n")}}
+{{make_cmd(config.install)}}
 
 uninstall:
 {{tab}}$(info UNINSTALL)
-{{config.uninstall.split("\n").map(("\t$(Q){$}")).$to_str("\n")}}
+{{make_cmd(config.uninstall)}}
 
 clean:
 {{tab}}$(info CLEAN)
@@ -130,7 +134,7 @@ clean:
 
 cleanout:
 {{tab}}$(info CLEAN OUTPUT)
-{{tab}}$(Q){{cmd.rmdir(config.outdir)}}
+{{make_cmd(cmd.rmdir(config.outdir))}}
 
 .PHONY: {{this.phony}}
 

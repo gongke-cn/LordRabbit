@@ -12,17 +12,17 @@ public Validator: class {
             if this.#value == null {
                 this.#value = this.check()
                 config.cache[this.tag] = this.#value
-            }
 
-            stdout.puts(L"check \"{this.desc}\": ")
-            if this.#value != null {
-                result = this.#value
-                if result == "" {
-                    result = "ok"
+                stdout.puts(L"check \"{this.desc}\": ")
+                if this.#value != null {
+                    result = this.#value
+                    if result == "" {
+                        result = "ok"
+                    }
+                    stdout.puts("{result}\n")
+                } else {
+                    stdout.puts(L"failed\n")
                 }
-                stdout.puts("{result}\n")
-            } else {
-                stdout.puts(L"failed\n")
             }
 
             this.#tested = true
