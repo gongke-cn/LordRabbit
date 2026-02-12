@@ -20,7 +20,6 @@ Makefile: class ExeValidator {
     prepare() {
         this.instdir = config.instdir
 
-        config.instdir = "$(INST)"
         config.shell = ShellCommand()
 
         if !config.outfile {
@@ -108,7 +107,6 @@ Makefile: class ExeValidator {
 
         File.store_text(config.outfile, ''
 Q ?= @
-INST ?= {{this.instdir}}
 
 all: {{config.products.$to_str(" ")}}
 
