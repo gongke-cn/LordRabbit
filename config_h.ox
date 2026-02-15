@@ -14,18 +14,23 @@ public config_h: func(name = "config.h") {
         return
     }
 
+    path = get_path(name)
+
     sb = String.Builder()
+    macro = basename(path).to_upper().replace(/[\.\-]/, "_")
+    sb.append("#ifndef _{macro}_\n")
+    sb.append("#define _{macro}_\n\n")
     for config.macro_dict.entries() as [mn, mv] {
         if mv == null {
             mv = "1"
         }
 
-        sb.append("#define {mn} {mv}\n")
+        sb.append("#define {mn} {mv}\n\n")
     }
+    sb.append("#endif\n")
 
     new = sb.$to_str()
 
-    path = get_path(name)
     if Path(path).exist {
         old = File.load_text(path)
     }
