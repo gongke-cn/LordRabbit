@@ -18,6 +18,7 @@ public CCValidator: class Validator {
             src: def.src
             cflags: def.cflags
             incdirs: def.incdirs
+            incs: def.incs
             macros: def.macros
         }
     }
@@ -36,6 +37,7 @@ public CCValidator: class Validator {
             obj: obj_file
             cflags: this.cflags
             incdirs: this.incdirs
+            incs: this.incs
             macros: this.macros
         }
 
@@ -70,6 +72,7 @@ public CLinkValidator: class Validator {
             cflags: def.cflags
             ldflags: def.ldflags
             incdirs: def.incdirs
+            incs: def.incs
             macros: def.macros
             libdirs: def.libdirs
             libs: def.libs
@@ -91,6 +94,7 @@ public CLinkValidator: class Validator {
             obj: obj_file
             cflags: this.cflags
             incdirs: this.incdirs
+            incs: this.incs
             macros: this.macros
         }
 
@@ -135,6 +139,7 @@ public HValidator: class CCValidator {
             toolchain: def.toolchain
             cflags: def.cflags
             incdirs: def.incdirs
+            incs: def.incs
             macros: def.macros
             cxx: def.cxx
             src: ''
@@ -160,6 +165,7 @@ public LibValidator: class CLinkValidator {
             cflags: def.cflags
             ldflags: def.ldflags
             incdirs: def.incdirs
+            incs: def.incs
             macros: def.macros
             libdirs: def.libdirs
             libs: libs
@@ -181,6 +187,7 @@ public MacroValidator: class CCValidator {
             toolchain: def.toolchain
             cflags: def.cflags
             incdirs: def.incdirs
+            incs: def.incs
             macros: def.macros
             cxx: def.cxx
             src: ''
@@ -215,6 +222,7 @@ int main (int argc, char **argv) {
             cflags: def.cflags
             ldflags: def.ldflags
             incdirs: def.incdirs
+            incs: def.incs
             macros: def.macros
             libdirs: def.libdirs
             libs: def.libs
