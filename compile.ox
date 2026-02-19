@@ -387,8 +387,9 @@ public build_lib: func(def) {
         def.exeinstdir = "bin"
     }
 
+    def.pic = true
+
     sdef = {...def}
-    sdef.pic = true
 
     objs = add_objs(def, "{def.name}-lib-")
 
@@ -480,6 +481,8 @@ public build_dlib: func(def, objs) {
     }
 
     if objs == null {
+        def.pic = true
+
         //Add objects.
         objs = add_objs(def, "{def.name}-dlib-")
     }
