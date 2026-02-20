@@ -85,5 +85,7 @@ public Linux: {
                 })
             }
         }
+
+        add_product(lib)
     }
 }

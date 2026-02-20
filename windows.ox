@@ -75,5 +75,8 @@ public Windows: {
                 strip: true
             })
         }
+
+        add_product(lib)
+        add_product(dll)
     }
 }

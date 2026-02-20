@@ -84,4 +84,6 @@ public gen_file: func(def) {
             mode: "0644"
         })
     }
+
+    add_product(file)
 }

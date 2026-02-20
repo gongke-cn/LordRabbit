@@ -287,10 +287,6 @@ public install: func(def) {
 public add_install: func(job) {
     cmd = shell()
 
-    if job.src && !job.symlink {
-        config.products.push(job.src)
-    }
-
     if config.install {
         config.install += "\n"
     }

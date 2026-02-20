@@ -289,6 +289,8 @@ public build_exe: func(def) {
             strip: true
         })
     }
+
+    add_product(exe)
 }
 
 //JSON schema of LibRule.
@@ -452,6 +454,8 @@ public build_slib: func(def, objs) {
             mode: "0644"
         })
     }
+
+    add_product(lib)
 }
 
 /*?
