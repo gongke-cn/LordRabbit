@@ -25,16 +25,25 @@ public run_lr_build: func(dn) {
     //Store old settings.
     old_toolchain = config.toolchain
     old_currdir = config.currdir
+    old_topdir = config.topdir
     old_package = config.package
 
     config.buildfiles.push(path)
     config.currdir = normpath(dn)
+    if dn == "." {
+        config.topdir = "."
+    } elif config.topdir == "." {
+        config.topdir = ".."
+    } else {
+        config.topdir = "../{config.topdir}"
+    }
     
     file(config)
 
     //Restore old settings.
     config.toolchain = old_toolchain
     config.currdir = old_currdir
+    config.topdir = old_topdir
     config.package = old_package
 }
 

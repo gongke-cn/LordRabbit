@@ -692,6 +692,11 @@ Convert an array of path parameters to an array of actual pathnames.
 
 The input is an array of path parameters. Returns a string array corresponding to the actual path of each path parameter. Returns null if the input is null.
 
+### get_topdir
+Get the top directory of the project.
+
+The return value is a string representing the top directory path.
+
 ### gtkdoc
 Create documentation using "gtkdoc".
 

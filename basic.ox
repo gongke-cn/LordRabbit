@@ -111,6 +111,14 @@ public get_instdir: func {
 }
 
 /*?
+ *? Get the top directory of the project.
+ *? @return {String} The top directory.
+ */
+public get_topdir: func {
+    return config.topdir
+}
+
+/*?
  *? Get the current toolchain.
  *? @return {Toolchain} The current toolchain object.
  */
