@@ -517,35 +517,6 @@ public add_ldflags: func(f) {
 }
 
 /*?
- *? Solve the linked libraries.
- *? @param libs {[String]} The linked libraries.
- *? @return {LinkInfo} The library linked information. 
- */
-public solve_libs: func(libs) {
-    li = {
-        libs: []
-        libdirs: []
-        deplibs: []
-    }
-
-    for libs as lib {
-        if lib[0] == "+" {
-            lib = get_path(lib.slice(1))
-            libdir = dirname(lib)
-            libbase = basename(lib)
-
-            li.libdirs.push(normpath("{get_outdir()}/{libdir}"))
-            li.libs.push(libbase)
-            li.deplibs.push(normpath("{get_outdir()}/{libdir}/lib{libbase}"))
-        } else {
-            li.libs.push(lib)
-        }
-    }
-
-    return li
-}
-
-/*?
  *? Add a job.
  *? @param job {Function} The job function.
  */

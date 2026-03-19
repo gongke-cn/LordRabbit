@@ -2,6 +2,7 @@
 ref "std/io"
 ref "std/path"
 ref "std/fs"
+ref "json/json"
 ref "./exe_validator"
 ref "./inner_tools"
 ref "./tools"

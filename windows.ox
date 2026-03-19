@@ -16,38 +16,38 @@ public Windows: {
     dlib_suffix: ".dll.a"
 
     //Build dynamic library.
-    build_dlib: func(def, objs, solve_dep_libs) {
+    build_dlib: func(def) {
+        lib = def.target
+
         if def.version {
             dllbase = "lib{def.name}-{def.version}.dll"
         } else {
             dllbase = "lib{def.name}.dll"
         }
 
-        dll = normpath("{get_outdir()}/{get_currdir()}/{dllbase}")
-        lib = normpath("{get_outdir()}/{get_currdir()}/lib{def.name}.dll.a")
+        dll = "{dirname(lib)}/{dllbase}"
 
-        tc = toolchain()
+        tc = def.toolchain
 
-        if def.pcs {
-            pc_libs = def.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
-        }
-
-        li = solve_libs(def.libs)
+        pc_libs = def.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
+        ldflags = "{def.ldflags} {pc_libs} {get_ldflags()}"
+        libdirs = [...def.libdirs, ...get_libdirs()]
+        libs = [...def.libs, ...get_libs()]
 
         linkcmd = tc.objs2dlib({
-            objs
+            objs: def.objs
             lib: dll
             slib: lib
-            libdirs: [...li.libdirs, ...get_paths(def.libdirs), ...get_libdirs()]
-            libs: [...li.libs, ...get_libs()]
-            ldflags: "{def.ldflags} {pc_libs} {get_ldflags()}"
+            libdirs
+            libs
+            ldflags
             cxx: def.cxx
         })
 
         cmd = shell()
 
         rule = {
-            srcs: objs
+            srcs: def.srcs
             dsts: [dll, lib]
             cmd: ''
 {{cmd.mkdir(dirname(dll))}}
@@ -57,7 +57,6 @@ public Windows: {
         }
 
         add_rule(rule)
-        solve_dep_libs(rule, li.deplibs)
 
         if def.instdir != "none" {
             add_install({
@@ -70,7 +69,7 @@ public Windows: {
         if def.exeinstdir != "none" {
             add_install({
                 src: dll
-                dst: normpath("{get_instdir()}/{def.instdir}/{dllbase}")
+                dst: normpath("{get_instdir()}/{def.exeinstdir}/{dllbase}")
                 mode: "0644"
                 strip: true
             })

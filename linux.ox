@@ -1,4 +1,5 @@
 ref "std/path"
+ref "json/json"
 ref "./log"
 ref "./basic"
 
@@ -14,35 +15,34 @@ public Linux: {
     dlib_suffix: ".so"
 
     //Build dynamic library.
-    build_dlib: func(def, objs, solve_dep_libs) {
+    build_dlib: func(def) {
+        lib = def.target
+        libbase = basename(def.target)
+    
         if def.version {
-            libbase = "lib{def.name}{this.dlib_suffix}.{def.version}"
-        } else {
-            libbase = "lib{def.name}{this.dlib_suffix}"
+            lib = "{lib}.{def.version}"
+            libbase = "{libbase}.{def.version}"
         }
 
-        lib = normpath("{get_outdir()}/{get_currdir()}/{libbase}")
-
-        tc = toolchain()
+        tc = def.toolchain
         cmd = shell()
 
-        if def.pcs {
-            pc_libs = def.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
-        }
-
-        li = solve_libs(def.libs)
+        pc_libs = def.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
+        ldflags = "{def.ldflags} {pc_libs} {get_ldflags()}"
+        libdirs = [...def.libdirs, ...get_libdirs()]
+        libs = [...def.libs, ...get_libs()]
 
         linkcmd = tc.objs2dlib({
-            objs
+            objs: def.objs
             lib
-            libdirs: [...li.libdirs, ...get_paths(def.libdirs), ...get_libdirs()]
-            libs: [...li.libs, ...get_libs()]
-            ldflags: "{def.ldflags} {pc_libs} {get_ldflags()}"
+            libdirs
+            libs
+            ldflags
             cxx: def.cxx
         })
 
         rule = {
-            srcs: objs
+            srcs: def.srcs
             dsts: [lib]
             cmd: ''
 {{cmd.mkdir(dirname(lib))}}
@@ -51,12 +51,9 @@ public Linux: {
         }
 
         add_rule(rule)
-        solve_dep_libs(rule, li.deplibs)
 
         if def.version {
-            cmd = shell()
-
-            link = normpath("{dirname(lib)}/lib{def.name}{this.dlib_suffix}")
+            link = def.target
 
             add_rule({
                 srcs: [lib]

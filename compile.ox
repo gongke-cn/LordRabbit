@@ -1,5 +1,6 @@
 ref "std/path"
 ref "json/json_schema"
+ref "json/json"
 ref "./basic"
 ref "./log"
 
@@ -123,38 +124,82 @@ add_objs: func(def, prefix) {
     return objs
 }
 
+//Libraries dictionary.
 lib_dict: Dict()
 
+//Split libraries to external and internal array.
+split_libs: func(libs) {
+    external = []
+    internal = []
+    for libs as lib {
+        if lib[0] == "+" {
+            internal.push(get_path(lib))
+        } else {
+            external.push(lib)
+        }
+    }
+
+    return {internal, external}
+}
+
+//Get link information.
+get_link_info: func(def, objs) {
+    li = {
+        srcs: [...objs]
+        ldflags: def.ldflags
+        pcs: Set().[...def.pcs]
+        libdirs: Set().[...get_paths(def.libdirs)]
+        libs: Set()
+    }
+
+    split_libs(def.libs) => {internal: li.internal_libs, external: li.external_libs}
+
+    return li
+}
+
+//Solve link information.
+solve_link_info: func(li, internal_libs) {
+    for internal_libs as lib {
+        li.libdirs.add(dirname(lib))
+        li.libs.add(basename(lib))
+
+        ent = lib_dict[lib]
+        if !ent {
+            throw Error("cannot find library \"{lib}\"")
+        } else {
+            li.pcs.[...ent.def.pcs]
+            li.libdirs.[...ent.def.libdirs]
+            li.libs.[...li.external_libs, ...ent.def.external_libs]
+            li.srcs.[...ent.targets]
+
+            if ent.def.ldflags {
+                li.ldflags = "{li.ldflags} {ent.def.ldflags}"
+            }
+
+            solve_link_info(li, ent.def.internal_libs)
+        }
+    }
+}
+
 //Add a library.
-add_lib: func(name, lib) {
+add_lib: func(name, libpath, def) {
     ent = lib_dict.get(name)
     if !ent {
-        ent = []
+        ent = {targets:[]}
 
         lib_dict.add(name, ent)
     }
 
-    ent.push(lib)
-}
+    split_libs(def.libs) => {internal: internal_libs, external: external_libs}
 
-//Solve the dependent libraries.
-solve_dep_libs: func(rule, deplibs) {
-    loc = get_location()
-
-    add_job(func {
-        libs = []
-
-        for deplibs as lib {
-            ent = lib_dict.get(lib)
-            if !ent {
-                throw Error(L"{loc}: library \"{lib}\" is not defined")
-            }
-
-            libs.[...ent]
-        }
-
-        rule.srcs = [...rule.srcs, ...libs]
-    })
+    ent.targets.push(libpath)
+    ent.def = {
+        pcs: def.pcs
+        ldflags: def.ldflags
+        libdirs: get_paths(def.libdirs)
+        internal_libs
+        external_libs
+    }
 }
 
 //JSON schema of ExeRule.
@@ -244,42 +289,9 @@ public build_exe: func(def) {
     //Add objects.
     objs = add_objs(def, "{def.name}-exe-")
 
-    //Add link job.
+    //Add installation job.
     tc = toolchain()
-
-    if def.pcs {
-        pc_libs = def.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
-    }
-
-    ldflags = "{def.ldflags} {pc_libs} {get_ldflags()}"
-    li = solve_libs(def.libs)
-    libdirs = [...li.libdirs, ...get_paths(def.libdirs), ...get_libdirs()]
-    libs = [...li.libs, ...get_libs()]
-
     exe = normpath("{get_outdir()}/{get_currdir()}/{def.name}{tc.target.exe_suffix}")
-
-    cmd = shell()
-
-    linkcmd = tc.objs2exe({
-        objs
-        exe
-        ldflags
-        libdirs
-        libs
-        cxx: has_cxx(def.srcs)
-    })
-
-    rule = {
-        srcs: objs
-        dsts: [exe]
-        cmd: ''
-{{cmd.mkdir(dirname(exe))}}
-{{linkcmd}}
-        ''
-    }
-
-    add_rule(rule)
-    solve_dep_libs(rule, li.deplibs)
 
     if def.instdir != "none" {
         add_install({
@@ -291,6 +303,40 @@ public build_exe: func(def) {
     }
 
     add_product(exe)
+
+    //Add link job.
+    li = get_link_info(def, objs)
+
+    add_job(func {
+        solve_link_info(li, li.internal_libs)
+
+        pc_libs = li.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
+        ldflags = "{li.ldflags} {pc_libs} {get_ldflags()}"
+        libdirs = [...li.libdirs, ...get_libdirs()]
+        libs = [...li.libs, ...get_libs()]
+
+        cmd = shell()
+
+        linkcmd = tc.objs2exe({
+            objs
+            exe
+            ldflags
+            libdirs
+            libs
+            cxx: has_cxx(def.srcs)
+        })
+
+        rule = {
+            srcs: li.srcs
+            dsts: [exe]
+            cmd: ''
+    {{cmd.mkdir(dirname(exe))}}
+    {{linkcmd}}
+            ''
+        }
+
+        add_rule(rule)
+    })
 }
 
 //JSON schema of LibRule.
@@ -427,9 +473,9 @@ public build_slib: func(def, objs) {
     //Add static library job.
     tc = toolchain()
 
-    libname = normpath("{get_outdir()}/{get_currdir()}/lib{def.name}")
-    lib = "{libname}{tc.target.slib_suffix}"
-    add_lib(libname, lib)
+    libname = normpath("{get_outdir()}/{get_currdir()}/{def.name}")
+    lib = normpath("{get_outdir()}/{get_currdir()}/lib{def.name}{tc.target.slib_suffix}")
+    add_lib(libname, lib, def)
 
     cmd = shell()
 
@@ -494,11 +540,24 @@ public build_dlib: func(def, objs) {
     //Add dynamic library job.
     tc = toolchain()
 
-    def.cxx = has_cxx(def.srcs)
+    libname = normpath("{get_outdir()}/{get_currdir()}/{def.name}")
+    lib = normpath("{get_outdir()}/{get_currdir()}/lib{def.name}{tc.target.dlib_suffix}")
+    add_lib(libname, lib, def)
 
-    libname = normpath("{get_outdir()}/{get_currdir()}/lib{def.name}")
-    lib = "{libname}{tc.target.dlib_suffix}"
-    add_lib(libname, lib)
+    li = get_link_info(def, objs)
+    li.{
+        toolchain: tc
+        target: lib
+        name: def.name
+        version: def.version
+        cxx: has_cxx(def.srcs)
+        objs
+        instdir: def.instdir
+    }
 
-    tc.target.build_dlib(def, objs, solve_dep_libs)
+    add_job(func {
+        solve_link_info(li, li.internal_libs)
+
+        tc.target.build_dlib(li)
+    })
 }
