@@ -692,6 +692,11 @@ Convert an array of path parameters to an array of actual pathnames.
 
 The input is an array of path parameters. Returns a string array corresponding to the actual path of each path parameter. Returns null if the input is null.
 
+### get_pcs
+Get the dependent pkg-config modules.
+
+Returns a string array representing the modules' names.
+
 ### get_topdir
 Get the top directory of the project.
 
@@ -1097,6 +1102,11 @@ Register a callback function to be called after all "lrbuild.ox" files have fini
 Extension functions run during the loading and execution of "lrbuild.ox", when the configuration process is not yet complete. If some operations need to be performed after configuration is complete, a callback can be registered via this function.
 
 The parameter is a callback function.
+
+### add_pc
+Add a dependent pkg-config module.
+
+The parameter is a string representing the pkg-config module name.
 
 ### add_product
 Add a product file.

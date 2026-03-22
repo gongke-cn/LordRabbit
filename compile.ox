@@ -58,9 +58,9 @@ has_cxx: func(srcs) {
 add_objs: func(def, prefix) {
     tc = toolchain()
 
-    if def.pcs {
-        pc_cflags = def.pcs.$iter().map((tc.pkgconfig.module($).cflags)).$to_str(" ")
-    }
+    pcs = [...get_pcs(), ...def.pcs]
+
+    pc_cflags = pcs.$iter().map((tc.pkgconfig.module($).cflags)).$to_str(" ")
 
     objs = []
     srcs = []
@@ -310,7 +310,8 @@ public build_exe: func(def) {
     add_job(func {
         solve_link_info(li, li.internal_libs)
 
-        pc_libs = li.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
+        pcs = [...get_pcs(), ...li.pcs]
+        pc_libs = pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
         ldflags = "{li.ldflags} {pc_libs} {get_ldflags()}"
         libdirs = [...li.libdirs, ...get_libdirs()]
         libs = [...li.libs, ...get_libs()]

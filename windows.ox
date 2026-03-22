@@ -29,7 +29,8 @@ public Windows: {
 
         tc = def.toolchain
 
-        pc_libs = def.pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
+        pcs = [...get_pcs(), ...def.pcs]
+        pc_libs = pcs.$iter().map((tc.pkgconfig.module($).libs)).$to_str(" ")
         ldflags = "{def.ldflags} {pc_libs} {get_ldflags()}"
         libdirs = [...def.libdirs, ...get_libdirs()]
         libs = [...def.libs, ...get_libs()]

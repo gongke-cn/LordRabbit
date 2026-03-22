@@ -151,6 +151,14 @@ public get_ldflags: func {
 }
 
 /*?
+ *? Get pkg-config modules.
+ *? @return {[String]} The pkg-config modules.
+ */
+public get_pcs: func {
+    return [...config.pcs]
+}
+
+/*?
  *? Get the macro definitions.
  *? @return {String} The macro definitions.
  */
@@ -434,6 +442,18 @@ public undef: func(name) {
     }
 
     config.macro_dict.remove(name)
+}
+
+/*?
+ *? Add a dependent pkg-config module.
+ *? @param mod {String} The module name.
+ */
+public add_pc: func(mod) {
+    if !running() {
+        return
+    }
+
+    config.pcs.add(mod)
 }
 
 /*?

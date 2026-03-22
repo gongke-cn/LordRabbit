@@ -22,6 +22,7 @@ public config: {
     generator: null
     host: null
     target: null
+    pcs: Set()
     macro_dict: Dict()
     incdirs: Set()
     incs: Set()
