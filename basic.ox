@@ -214,6 +214,25 @@ public get_libs: func {
 }
 
 /*?
+ *? Add dependency.
+ *? @param dst The desctination file.
+ *? @param src The source file.
+ */
+public add_dep: func(dst, src) {
+    if !running() {
+        return
+    }
+
+    dst = get_path(dst)
+    src = get_path(src)
+
+    add_rule({
+         srcs: [src]
+         dsts: [dst]
+    })
+}
+
+/*?
  *? Add a rule.
  *? @param rule {Rule} The rule to be added.
  */

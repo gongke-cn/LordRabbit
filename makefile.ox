@@ -84,10 +84,18 @@ Makefile: class ExeValidator {
                 srcs = rule.srcs.$iter().$to_str(" ")
             }
 
-            this.rules += ''
-{{targets}}: {{srcs}}
+            if rule.cmd {
+                rulecmd = ''
 {{tab}}$(info BUILD {{targets}} <= {{srcs}})
 {{make_cmd(rule.cmd)}}
+                ''
+            } else {
+                rulecmd = null
+            }
+
+            this.rules += ''
+{{targets}}: {{srcs}}
+{{rulecmd}}
 
 
             ''

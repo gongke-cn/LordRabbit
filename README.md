@@ -124,6 +124,15 @@ add_cflags("-O2")
 ```
 In the generated Makefile, the command to compile ".o" files adds the "-Wall -O2" flags.
 
+### add_dep
+Add a dependency relationship of 2 files.
+
+Example:
+```
+//"test.o" depend on "test.h".
+add_dep("test.o", "test.h")
+```
+
 ### add_inc
 Add a global automatically included header file.
 

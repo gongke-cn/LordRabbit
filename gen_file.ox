@@ -1,6 +1,7 @@
 ref "std/path"
 ref "json/json_schema"
 ref "./basic"
+ref "./shell_command"
 ref "./log"
 
 //JSON schem of GenRule
@@ -70,6 +71,11 @@ public gen_file: func(def) {
         }
         }
     })
+
+    cmd = ''
+{{ShellCommand.mkdir(dirname(file))}}
+{{cmd}}
+''
 
     add_rule({
         srcs: get_paths(def.srcs)

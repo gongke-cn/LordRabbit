@@ -91,13 +91,17 @@ add_objs: func(def, prefix) {
             obj = objs[i]
             dep = obj.replace(/\.o$/, ".dep")
 
-            if !(src ~ /\.(c|cpp|cxx|c\+\+)$/) {
+            if src ~ /\.(cpp|cxx|c\+\+)$/ {
+                is_cxx = true
+            } elif src ~ /\.c$/ {
+                is_cxx = false
+            } else {
                 continue
             }
 
             cmd = shell()
 
-            compilecmd = tc.c2obj({
+            objdef = {
                 src
                 obj
                 dep
@@ -106,7 +110,13 @@ add_objs: func(def, prefix) {
                 incs
                 cflags
                 pic: def.pic
-            })
+            }
+
+            if is_cxx {
+                compilecmd = tc.cxx2obj(objdef)
+            } else {
+                compilecmd = tc.c2obj(objdef)
+            }
 
             add_rule({
                 srcs: [src]
