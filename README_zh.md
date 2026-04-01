@@ -121,6 +121,18 @@ add_cflags("-Wall")
 add_cflags("-O2")
 ```
 在生成的Makefile中，编译".o"的命令中增加了"-Wall -O2"标记。
+### add_dep
+设置两个文件的依赖关系。
+
+如:
+```
+//"test.o" 依赖 "test.h".
+add_dep("+test-lib-test.o", "test.h")
+//"test1.o" 和 "test2.o" 依赖 "test.h"
+add_dep(["+test-lib-test1.o", "+test-lib-test2.o"], "test.h")
+
+```
+
 ### add_inc
 增加一个全局自动包含头文件。
 
